@@ -354,6 +354,7 @@ export default function FaceRegistration() {
                 style={{ background: 'var(--primary)', color: '#fff' }}>
                 Go to Dashboard →
               </button>
+              
             </div>
           )}
         </div>

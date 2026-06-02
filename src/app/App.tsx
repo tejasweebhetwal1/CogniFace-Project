@@ -1,106 +1,232 @@
-import { useState } from 'react';
-import HomePage from './pages/HomePage';
-import LoginPage from './pages/LoginPage';
-import AdminDashboard from './pages/AdminDashboard';
-import LecturerPage from './pages/LecturerPage';
-import StudentPage from './pages/StudentPage';
-import FaceRegistration from './pages/FaceRegistration';
+import { useEffect, useState } from "react";
+import HomePage from "./pages/HomePage";
+import LoginPage from "./pages/LoginPage";
+import AdminDashboard from "./pages/AdminDashboard";
+import LecturerPage from "./pages/LecturerPage";
+import StudentPage from "./pages/StudentPage";
+import FaceRegistration from "./pages/FaceRegistration";
+
+export type Screen =
+  | "home"
+  | "login"
+  | "admin"
+  | "lecturer"
+  | "student"
+  | "facereg";
 
 export default function App() {
-  const [activeScreen, setActiveScreen] = useState('home');
+  const [activeScreen, setActiveScreen] = useState<Screen>("home");
 
-  const screens = {
-    home: HomePage,
-    login: LoginPage,
-    admin: AdminDashboard,
-    lecturer: LecturerPage,
-    student: StudentPage,
-    facereg: FaceRegistration
+  const navigate = (screen: Screen) => {
+    setActiveScreen(screen);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const ActiveComponent = screens[activeScreen as keyof typeof screens];
+  const showMessage = (message: string) => {
+    alert(message);
+  };
+
+  const scrollHome = (top: number) => {
+    if (activeScreen !== "home") {
+      setActiveScreen("home");
+      setTimeout(() => {
+        window.scrollTo({ top, behavior: "smooth" });
+      }, 80);
+    } else {
+      window.scrollTo({ top, behavior: "smooth" });
+    }
+  };
+
+  useEffect(() => {
+    const handleNavigate = (event: Event) => {
+      const customEvent = event as CustomEvent<Screen>;
+      navigate(customEvent.detail);
+    };
+
+    window.addEventListener("navigate-screen", handleNavigate);
+
+    return () => {
+      window.removeEventListener("navigate-screen", handleNavigate);
+    };
+  }, []);
+
+  const handleGlobalClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    const button = (event.target as HTMLElement).closest("button");
+    if (!button) return;
+
+    if (button.dataset.handled === "true") return;
+
+    const text = button.textContent?.trim().toLowerCase() || "";
+
+    // IMPORTANT: prevents LoginPage Sign In from being sent back to login
+    if (activeScreen === "login" && text.includes("sign in")) {
+      return;
+    }
+
+    if (text.includes("features")) {
+      scrollHome(900);
+      return;
+    }
+
+    if (text.includes("how it works")) {
+      scrollHome(1350);
+      return;
+    }
+
+    if (text.includes("security")) {
+      scrollHome(1650);
+      return;
+    }
+
+    if (text.includes("pricing")) {
+      scrollHome(2500);
+      return;
+    }
+
+    if (text.includes("sign in")) {
+      navigate("login");
+      return;
+    }
+
+    if (text.includes("get started") || text.includes("start for free")) {
+      navigate("login");
+      return;
+    }
+
+    if (text.includes("see face recognition")) {
+      navigate("facereg");
+      return;
+    }
+
+    if (text.includes("view administrator")) {
+      navigate("admin");
+      return;
+    }
+
+    if (text.includes("view lecturer")) {
+      navigate("lecturer");
+      return;
+    }
+
+    if (text.includes("view student")) {
+      navigate("student");
+      return;
+    }
+
+    if (text.includes("request demo") || text.includes("schedule demo")) {
+      showMessage("Demo request is ready. Backend endpoint needed: POST /api/demo-requests");
+      return;
+    }
+  };
+
+  const screens: Record<Screen, JSX.Element> = {
+    home: <HomePage />,
+    login: <LoginPage navigate={navigate} />,
+    admin: <AdminDashboard />,
+    lecturer: <LecturerPage />,
+    student: <StudentPage />,
+    facereg: <FaceRegistration />,
+  };
 
   return (
-    <div style={{ fontFamily: 'var(--font-body)', background: 'var(--bg-base)', color: 'var(--text-primary)', minHeight: '100vh' }}>
-      {/* Top Navigation Bar */}
-      <div className="fixed top-0 left-0 right-0 z-[1000] h-16 flex items-center px-6 gap-3 border-b"
-        style={{ 
-          background: 'var(--bg-surface)', 
-          borderColor: 'var(--border)',
-          boxShadow: 'var(--shadow-sm)'
-        }}>
-        <div className="flex items-center gap-2.5 mr-5 flex-shrink-0">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white"
-            style={{ background: 'var(--primary)' }}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-              <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
-            </svg>
-          </div>
-          <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '18px', color: 'var(--text-primary)' }}>CogniFace</div>
-        </div>
-        
-        <div className="flex gap-1 p-1 rounded-lg overflow-x-auto"
-          style={{ background: 'var(--bg-raised)' }}>
-          {[
-            { id: 'home', label: 'Homepage', icon: '🏠' },
-            { id: 'login', label: 'Login', icon: '🔐' },
-            { id: 'admin', label: 'Admin', icon: '⚙️' },
-            { id: 'lecturer', label: 'Lecturer', icon: '👨‍🏫' },
-            { id: 'student', label: 'Student', icon: '🎓' },
-            { id: 'facereg', label: 'Face Reg', icon: '📷' }
-          ].map((screen) => (
+    <div
+      onClick={handleGlobalClick}
+      style={{
+        fontFamily: "var(--font-body)",
+        background: "var(--bg-base)",
+        color: "var(--text-primary)",
+        minHeight: "100vh",
+      }}
+    >
+      <header
+        className="sticky top-0 z-50 w-full border-b"
+        style={{
+          background: "#ffffff",
+          borderColor: "#e5e7eb",
+        }}
+      >
+        <div className="max-w-7xl mx-auto px-8">
+          <div className="h-20 flex items-center justify-between">
             <button
-              key={screen.id}
-              onClick={() => setActiveScreen(screen.id)}
-              className="px-4 py-2 rounded-md text-sm whitespace-nowrap transition-all duration-200 flex items-center gap-2"
-              style={{
-                background: activeScreen === screen.id ? 'var(--primary)' : 'transparent',
-                color: activeScreen === screen.id ? 'white' : 'var(--text-tertiary)',
-                fontWeight: activeScreen === screen.id ? 600 : 500,
-                boxShadow: activeScreen === screen.id ? 'var(--shadow-sm)' : 'none'
-              }}
-              onMouseEnter={(e) => {
-                if (activeScreen !== screen.id) {
-                  e.currentTarget.style.color = 'var(--text-primary)';
-                  e.currentTarget.style.background = 'var(--bg-surface)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (activeScreen !== screen.id) {
-                  e.currentTarget.style.color = 'var(--text-tertiary)';
-                  e.currentTarget.style.background = 'transparent';
-                }
-              }}>
-              <span>{screen.icon}</span>
-              <span>{screen.label}</span>
+              data-handled="true"
+              onClick={() => navigate("home")}
+              className="flex items-center gap-3"
+            >
+              <div
+                className="w-10 h-10 rounded-full flex items-center justify-center"
+                style={{
+                  background: "#1e40af",
+                  color: "white",
+                  fontSize: "18px",
+                }}
+              >
+                🎓
+              </div>
+
+              <span
+                style={{
+                  fontSize: "20px",
+                  fontWeight: 700,
+                  color: "#111827",
+                  fontFamily: "Georgia, serif",
+                }}
+              >
+                CogniFace
+              </span>
             </button>
-          ))}
-        </div>
-        
-        <div className="ml-auto px-3 py-1.5 rounded-full border text-xs whitespace-nowrap"
-          style={{ 
-            background: 'var(--bg-raised)', 
-            color: 'var(--text-tertiary)', 
-            borderColor: 'var(--border)',
-            fontFamily: 'var(--font-mono)',
-            fontSize: '11px'
-          }}>
-          UI Prototype · NIT 3003
-        </div>
-      </div>
 
-      {/* Screen Content */}
-      <div className="pt-16" style={{ animation: 'fadeUp 0.35s cubic-bezier(0.4, 0, 0.2, 1)' }}>
-        <ActiveComponent />
-      </div>
+            <nav className="hidden md:flex items-center gap-12">
+              <button data-handled="true" onClick={() => scrollHome(900)}>
+                Features
+              </button>
 
-      <style>{`
-        @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(10px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
+              <button data-handled="true" onClick={() => scrollHome(1350)}>
+                How it works
+              </button>
+
+              <button data-handled="true" onClick={() => scrollHome(1650)}>
+                Security
+              </button>
+
+              <button data-handled="true" onClick={() => scrollHome(2500)}>
+                Pricing
+              </button>
+            </nav>
+
+            <div className="flex items-center gap-4">
+              <button
+                data-handled="true"
+                onClick={() => navigate("login")}
+                className="px-6 py-3 rounded-xl border"
+                style={{
+                  borderColor: "#d1d5db",
+                  background: "#ffffff",
+                  fontWeight: 600,
+                }}
+              >
+                Sign In
+              </button>
+
+              <button
+                data-handled="true"
+                onClick={() =>
+                  showMessage("Demo request is ready. Backend endpoint needed: POST /api/demo-requests")
+                }
+                className="px-7 py-3 rounded-xl"
+                style={{
+                  background: "#1e40af",
+                  color: "#ffffff",
+                  fontWeight: 600,
+                }}
+              >
+                Request Demo
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {screens[activeScreen]}
     </div>
   );
 }

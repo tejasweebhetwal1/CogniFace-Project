@@ -1,35 +1,9 @@
 export default function HomePage() {
   return (
     <div className="min-h-screen">
-      {/* Home Nav */}
-      <div className="fixed top-16 left-0 right-0 z-[100] h-16 flex items-center justify-between px-15 border-b"
-        style={{ background: 'var(--bg-surface)', borderColor: 'var(--border)' }}>
-        <div className="flex items-center gap-2" style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '18px' }}>
-          <div className="w-2 h-2 rounded-full" style={{ background: 'var(--primary)' }} />
-          CogniFace
-        </div>
-        <div className="flex gap-7">
-          <button className="text-sm transition-colors hover:text-[var(--text-primary)]" style={{ color: 'var(--text-secondary)', fontWeight: 500 }}>Features</button>
-          <button className="text-sm transition-colors hover:text-[var(--text-primary)]" style={{ color: 'var(--text-secondary)', fontWeight: 500 }}>How it works</button>
-          <button className="text-sm transition-colors hover:text-[var(--text-primary)]" style={{ color: 'var(--text-secondary)', fontWeight: 500 }}>Security</button>
-          <button className="text-sm transition-colors hover:text-[var(--text-primary)]" style={{ color: 'var(--text-secondary)', fontWeight: 500 }}>Pricing</button>
-        </div>
-        <div className="flex gap-2.5">
-          <button className="px-4 py-2 rounded-lg text-sm transition-all border hover:border-[var(--border-mid)]"
-            style={{ background: 'transparent', color: 'var(--text-primary)', borderColor: 'var(--border)', fontWeight: 600 }}>
-            Sign In
-          </button>
-          <button className="px-4 py-2 rounded-lg text-sm transition-all hover:shadow-md"
-            style={{ background: 'var(--primary)', color: '#fff', fontWeight: 600 }}
-            onMouseEnter={(e) => e.currentTarget.style.background = 'var(--primary-hover)'}
-            onMouseLeave={(e) => e.currentTarget.style.background = 'var(--primary)'}>
-            Request Demo
-          </button>
-        </div>
-      </div>
 
       {/* Hero */}
-      <div className="min-h-screen flex items-center px-15 pt-30 relative overflow-hidden">
+      <div className="min-h-screen flex items-center px-15 pt-10 relative overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 pointer-events-none opacity-30">
           <div className="absolute inset-0"
@@ -51,21 +25,28 @@ export default function HomePage() {
             </span>
           </div>
 
-          <h1 className="mb-5" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(42px, 5vw, 64px)', fontWeight: 700, lineHeight: 1.1, color: 'var(--text-primary)' }}>Attendance,<br /><span style={{ color: 'var(--primary)', fontStyle: 'italic' }}>made effortless</span><br />for every campus.</h1>
+          <h1 className="mb-5" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(42px, 5vw, 64px)', fontWeight: 700, lineHeight: 1.1, color: 'var(--text-primary)' }}>Attendance,<br /><span style={{ color: 'var(--primary)', fontStyle: 'italic' }}>made effortless</span><br />for your campus.</h1>
 
           <p className="text-lg mb-9 max-w-lg" style={{ color: 'var(--text-secondary)', lineHeight: 1.7 }}>Replace manual roll calls with real-time facial recognition — built exclusively for academic institutions that demand accuracy, privacy, and scale.</p>
 
           <div className="flex gap-3 flex-wrap">
-            <button className="px-9 py-3.5 rounded-xl text-base transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
-              style={{ background: 'var(--primary)', color: '#fff', fontWeight: 600, height: '54px' }}
-              onMouseEnter={(e) => e.currentTarget.style.background = 'var(--primary-hover)'}
-              onMouseLeave={(e) => e.currentTarget.style.background = 'var(--primary)'}>
-              Get Started →
-            </button>
-            <button className="px-7 py-3.5 rounded-xl text-base transition-all border hover:border-[var(--border-mid)] hover:bg-[var(--bg-surface)]"
-              style={{ background: 'var(--bg-raised)', color: 'var(--text-primary)', borderColor: 'var(--border)', fontWeight: 600, height: '54px' }}>
-              See Face Recognition
-            </button>
+            <button
+  onClick={() =>
+    window.dispatchEvent(
+      new CustomEvent("navigate-screen", { detail: "facereg" })
+    )
+  }
+  className="px-7 py-3.5 rounded-xl text-base transition-all border hover:border-[var(--border-mid)] hover:bg-[var(--bg-surface)]"
+  style={{
+    background: 'var(--bg-raised)',
+    color: 'var(--text-primary)',
+    borderColor: 'var(--border)',
+    fontWeight: 600,
+    height: '54px'
+  }}
+>
+  See Face Recognition
+</button>
           </div>
         </div>
 
@@ -300,7 +281,7 @@ export default function HomePage() {
       <footer className="border-t py-10 px-15 flex items-center justify-between"
         style={{ background: 'var(--bg-surface)', borderColor: 'var(--border)' }}>
         <div style={{ fontFamily: 'var(--font-display)', fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)' }}>
-          FaceAttend
+          Cogniface
         </div>
         <div className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
           NIT 3003 Capstone · Adarsha Giri · Tejaswee Bhetwal · Aavash Poudel
